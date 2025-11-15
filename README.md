@@ -21,3 +21,5 @@ docker compose up --detach
 Once the docker container is up and running, you can access suwayomi at `http://localhost:4567`.
 
 The translator is configured so that any downloaded chapters from manga with the category "Auto Translate" will be automatically translated in the background. The first translation may take a while as the models need to be downloaded first but subsequent translations should be much faster after the model is saved to disk.
+
+Your translated chapters will be available in suwayomi's Local Source in the Browse tab.
