@@ -1,7 +1,6 @@
 name: biboo-translator
 services:
     suwayomi:
-        container_name: suwayomi
         environment:
             - EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]
             - FLARESOLVERR_ENABLED=true
