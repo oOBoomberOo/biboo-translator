@@ -20,7 +20,6 @@ services:
             - flaresolverr
             - database
     flaresolverr:
-        container_name: flaresolverr
         environment:
             TZ: America/New_York
         hostname: flaresolverr
@@ -56,8 +55,6 @@ services:
         ports:
             - 8000:8000
             - 8001:8001
-        environment:
-            - name=value
         # For GPU
         deploy:
             resources:
