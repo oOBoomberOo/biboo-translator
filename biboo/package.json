@@ -1,0 +1,21 @@
+{
+  "name": "biboo",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun ./src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "events": "^3.3.0",
+    "fast-xml-parser": "^5.3.2",
+    "p-queue": "^9.0.0",
+    "typed-emitter": "^2.1.0"
+  }
+}

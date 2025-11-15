@@ -1,0 +1,91 @@
+name: biboo-translator
+services:
+    suwayomi:
+        container_name: suwayomi
+        environment:
+            - EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]
+            - FLARESOLVERR_ENABLED=true
+            - FLARESOLVERR_URL=http://flaresolverr:8191
+            - TZ=America/New_York
+        hostname: suwayomi
+        image: ghcr.io/suwayomi/suwayomi-server:preview
+        networks:
+            - suwayomi
+        ports:
+            - 4567:4567
+        restart: always
+        volumes:
+            - ./data:/home/suwayomi/.local/share/Tachidesk
+        depends_on:
+            - flaresolverr
+            - database
+    flaresolverr:
+        container_name: flaresolverr
+        environment:
+            TZ: America/New_York
+        hostname: flaresolverr
+        image: ghcr.io/flaresolverr/flaresolverr:latest
+        networks:
+            - suwayomi
+        ports:
+            - 8191:8191
+        restart: unless-stopped
+    database:
+        image: postgres:17
+        volumes:
+            - database:/var/lib/postgresql/data
+        networks:
+            - suwayomi
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=suwayomi
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=manga
+        restart: always
+    manga-image-translator:
+        build:
+            context: ./manga-image-translator
+            dockerfile: Dockerfile
+        entrypoint: ["python", "server/main.py", "--verbose", "--start-instance", "--host=0.0.0.0", "--port=8000"]
+        volumes:
+            - ./manga-data/result:/app/result
+            - ./manga-data/huggingface_cache:/root/.cache/huggingface
+            - ./manga-data/models:/app/models
+        ipc: host
+        ports:
+            - 8000:8000
+            - 8001:8001
+        environment:
+            - name=value
+        # For GPU
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [ gpu ]
+        restart: unless-stopped
+    biboo:
+        build:
+            context: ./biboo
+            dockerfile: Dockerfile
+        volumes:
+            - ./data:/data
+            - ./config/:/config
+        environment:
+            - TRANSLATOR_API_ENDPOINT=http://manga-image-translator:8000
+            - TRANSLATOR_API_CONFIG=/config/manga-image-translator.json
+            - AUTO_TRANSLATE_TAG=Auto Translate
+            - LOOKUP_DIR=/data/downloads/mangas
+            - LOCAL_DIR=/data/local
+        restart: unless-stopped
+        depends_on:
+            - suwayomi
+            - manga-image-translator
+
+volumes:
+    database:
+
+networks:
+    suwayomi:
+        driver: bridge

@@ -1,0 +1,3 @@
+[submodule "manga-image-translator"]
+	path = manga-image-translator
+	url = git@github.com:zyddnys/manga-image-translator.git

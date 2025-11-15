@@ -1,0 +1,46 @@
+{
+	"$schema": "./config-schema.json",
+
+	"render": {
+		"renderer": "default",
+		"alignment": "auto",
+		"disable_font_border": false,
+		"font_size_offset": 0,
+		"font_size_minimum": -1,
+		"direction": "auto",
+		"uppercase": false,
+		"lowercase": false,
+		"gimp_font": "Sans-serif",
+		"no_hyphenation": false,
+		"font_color": null,
+		"line_spacing": null,
+		"font_size": null,
+		"rtl": true
+	},
+
+	"translator": {
+		"translator": "offline",
+		"target_lang": "ENG",
+		"no_text_lang_skip": false,
+		"skip_lang": null,
+		"gpt_config": null,
+		"translator_chain": null,
+		"selective_translation": null,
+		"enable_post_translation_check": true,
+		"post_check_max_retry_attempts": 3,
+		"post_check_repetition_threshold": 20,
+		"post_check_target_lang_threshold": 0.5
+	},
+
+	"detector": {
+		"detector": "default",
+		"detection_size": 2048,
+		"text_threshold": 0.5,
+		"det_rotate": false,
+		"det_auto_rotate": false,
+		"det_invert": false,
+		"det_gamma_correct": false,
+		"box_threshold": 0.7,
+		"unclip_ratio": 2.3
+	}
+}
