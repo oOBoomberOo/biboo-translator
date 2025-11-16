@@ -94,7 +94,7 @@ export async function convertToLocalSource(api: TranslatorApi, source: Extension
 		await fs.rmdir(destination, { recursive: true });
 	}
 
-	await fs.cp(temp, destination);
+	await fs.cp(temp, destination, { recursive: true });
 	await fs.rmdir(temp, { recursive: true });
 
 	const manga_dir = path.join(LOCAL_DIR, series);
