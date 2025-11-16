@@ -16,7 +16,10 @@ const translator = createApi();
 const tracker = createEventLoop(60);
 
 const translation_queue = new PQueue({ concurrency: 1 });
-const translation_cache = new Set<string>();
+
+function isInQueue(id: string): boolean {
+  return translation_queue.runningTasks.some(task => task.id === id);
+}
 
 tracker.on("tick", async () => {
   try {
@@ -36,7 +39,7 @@ tracker.on("discovered", async (source) => {
       return;
     }
 
-    if (translation_cache.has(source.path)) {
+    if (isInQueue(source.path)) {
       return;
     }
 
@@ -44,23 +47,19 @@ tracker.on("discovered", async (source) => {
     const local_path = path.join(getDestination(comic_info), 'completed');
 
     if (await fs.exists(local_path)) {
-      console.log(`skipping already translated manga: ${comic_info.series}/${comic_info.title}`);
-      translation_cache.add(source.path);
       return;
     }
 
 
-    translation_cache.add(source.path);
-    const result = await translation_queue.add(() => convertToLocalSource(translator, source));
-    tracker.emit("translated", result);
+    const result = await translation_queue.add(() => convertToLocalSource(translator, source), { id: source.path });
+    tracker.emit("translated", result, source);
   } catch (error) {
-    translation_cache.delete(source.path);
     tracker.emit("error", error as Error);
   }
 });
 
-tracker.on("translated", (source) => {
-  console.log(`Translated manga: ${source.comic_info.title}`);
+tracker.on("translated", (source, extension_source) => {
+  console.log(`Translated manga: ${extension_source.comic_info.series}/${extension_source.comic_info.title}`);
 });
 
 

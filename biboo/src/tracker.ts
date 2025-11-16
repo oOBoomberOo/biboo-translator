@@ -6,7 +6,7 @@ type TrackerEvents = {
 	error: (error: Error) => void;
 	tick: () => void;
 	discovered: (source: ExtensionSource) => void;
-	translated: (source: LocalSource) => void;
+	translated: (source: LocalSource, extension_source: ExtensionSource) => void;
 }
 
 type Tracker = TypedEventEmitter<TrackerEvents>;
